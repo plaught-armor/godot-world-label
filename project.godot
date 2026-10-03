@@ -1,0 +1,12 @@
+; A host project for the world_label addon, so a clone runs its example as is.
+
+config_version=5
+
+[application]
+
+config/name="world_label"
+run/main_scene="res://addons/world_label/example/world_label_example.tscn"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/world_label/plugin.cfg")

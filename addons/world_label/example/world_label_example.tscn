@@ -1,0 +1,75 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/world_label/world_label.gd" id="1_label"]
+[ext_resource type="Script" path="res://addons/world_label/scene_depth_effect.gd" id="2_depth"]
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_depth"]
+script = ExtResource("2_depth")
+effect_callback_type = 1
+
+[sub_resource type="Compositor" id="Compositor_depth"]
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_depth")])
+
+[sub_resource type="Environment" id="Environment_fog"]
+background_mode = 1
+background_color = Color(0.36, 0.4, 0.46, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.6, 0.62, 0.66, 1)
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.36, 0.4, 0.46, 1)
+fog_density = 1.0
+fog_depth_begin = 8.0
+fog_depth_end = 40.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_floor"]
+size = Vector2(80, 80)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pillar"]
+size = Vector3(1, 3, 1)
+
+[node name="WorldLabelExample" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_fog")
+compositor = SubResource("Compositor_depth")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 10, 0)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 1.7, 4)
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_floor")
+
+[node name="Pillar" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -2)
+mesh = SubResource("BoxMesh_pillar")
+
+[node name="PillarName" type="Node3D" parent="Pillar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+script = ExtResource("1_label")
+text = "Pillar"
+font_size = 40
+
+[node name="BehindThePillar" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -5)
+script = ExtResource("1_label")
+text = "Hidden by the pillar"
+font_size = 32
+color = Color(1, 0.85, 0.4, 1)
+
+[node name="Near" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1, -1)
+script = ExtResource("1_label")
+text = "Near: world size"
+font_size = 24
+
+[node name="Far" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1.5, -24)
+script = ExtResource("1_label")
+text = "Far: held at the floor, fading in fog"
+font_size = 24
+outline_color = Color(0.2, 0.05, 0.05, 1)
+range_m = 40.0
